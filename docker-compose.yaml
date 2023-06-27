@@ -12,7 +12,6 @@ services:
     volumes:
       - ./local_pgdata:/var/lib/postgresql/data
 
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -27,6 +26,23 @@ services:
     volumes:
       - ./pgadmin-data:/var/lib/pgadmin
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    environment:
+      JENKINS_ADMIN_PASSWORD: admin
+    volumes:
+      - ./jenkins_data:/var/lib/jenkins/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
+
 volumes:
   local_pgdata:
   pgadmin-data:
+  jenkins_data:
