@@ -1,7 +1,5 @@
 version: "3.8"
 services:
-
-# --- POSTGRES ---
   db:
     image: postgres
     container_name: postgres_db
@@ -12,24 +10,22 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     volumes:
-      - ./local_pgdata:/var/lib/postgresql/data
+      - local_pgdata:/var/lib/postgresql/data
 
-# --- PG ADMIN ---
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
     restart: always
-    ports:
-      - "5050:5050"
+    depends_on:
+      - db
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_LISTEN_ADDRESS: 0.0.0.0
       PGADMIN_LISTEN_PORT: 5050
     volumes:
-      - ./pgadmin-data:/var/lib/pgadmin
+      - pgadmin-data:/var/lib/pgadmin
 
-# --- JENKINS ---
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
@@ -42,41 +38,11 @@ services:
     environment:
       JENKINS_ADMIN_PASSWORD: admin
     volumes:
-      - ./jenkins_data:/var/lib/jenkins/data
+      - jenkins_data:/var/lib/jenkins/data
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/local/bin/docker:/usr/local/bin/docker
-
-# --- MONGO ---
-  mongo:
-    image: mongo
-    container_name: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-    volumes:
-      - ./mongo-data:/data/db
-    ports:
-      - "127.0.0.1:27017:27017"
-  
-# --- MONGO EXPRESS ---
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    depends_on:
-      - mongo
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin
-    ports:
-      - "8081:8081"
 
 volumes:
   local_pgdata:
   pgadmin-data:
   jenkins_data:
-  mongo-data:
