@@ -57,7 +57,7 @@ services:
     volumes:
       - ./mongo-data:/data/db
     ports:
-      - 27017:27017
+      - "127.0.0.1:27017:27017"
   
 # --- MONGO EXPRESS ---
   mongo-express:
@@ -73,7 +73,7 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     ports:
-      - 8081:8081
+      - "8081:8081"
 
 volumes:
   local_pgdata:
