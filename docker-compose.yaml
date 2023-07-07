@@ -18,6 +18,8 @@ services:
     restart: always
     depends_on:
       - db
+    ports:
+      - "5050:5050"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
